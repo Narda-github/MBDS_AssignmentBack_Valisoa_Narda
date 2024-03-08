@@ -2,12 +2,33 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 const mongoosePaginate = require('mongoose-aggregate-paginate-v2');
 
-let AssignmentSchema = Schema({
+/*let AssignmentSchema = Schema({
     id: Number,
     dateDeRendu: Date,
     nom: String,
     rendu: Boolean
-});
+});*/
+let AssignmentSchema = new Schema({
+    id: Number,
+    dateDeRendu: Date,
+    titre: String,
+    rendu: Boolean,
+    auteur: {
+      nom: String,
+      photo: String, //chemin repertoire de stockage
+      email: String
+    },
+    matiere: {
+      titre: String,
+      prof: {
+        nom: String,
+        photo: String, //chemin repertoire de stockage
+        email: String
+      }
+    },
+    note: Number,
+    remarques: String
+  });
 
 AssignmentSchema.plugin(mongoosePaginate);
 

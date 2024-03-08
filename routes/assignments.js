@@ -26,7 +26,8 @@ function getAssignments(req, res){
             if(err){
                 res.send(err)
             }
-    
+            console.log("data");
+            console.log(data);
             res.send(data);
         }
     );
@@ -52,10 +53,22 @@ function getAssignment(req, res){
 function postAssignment(req, res){
     let assignment = new Assignment();
     assignment.id = req.body.id;
-    assignment.nom = req.body.nom;
+    assignment.titre = req.body.titre;
     assignment.dateDeRendu = req.body.dateDeRendu;
     assignment.rendu = req.body.rendu;
-
+    assignment.auteur = req.body.auteur;
+    assignment.auteur.nom = req.body.auteur.nom;
+    assignment.auteur.photo = req.body.auteur.photo;
+    assignment.auteur.email  = req.body.auteur.email;
+    assignment.matiere = req.body.matiere;
+    assignment.matiere.titre  = req.body.matiere.titre;
+    assignment.matiere.prof  = req.body.matiere.prof;
+    assignment.matiere.prof.nom = req.body.matiere.prof.nom;
+    assignment.matiere.prof.email = req.body.matiere.prof.email;
+    assignment.matiere.prof.photo = req.body.matiere.prof.photo;
+    assignment.note = req.body.note;
+    assignment.remarques = req.body.remarques; 
+  
     console.log("POST assignment reçu :");
     console.log(assignment)
 
@@ -63,7 +76,7 @@ function postAssignment(req, res){
         if(err){
             res.send('cant post assignment ', err);
         }
-        res.json({ message: `${assignment.nom} saved!`})
+        res.json({ message: `${assignment.titre} saved!`})
     })
 }
 
@@ -92,7 +105,7 @@ function deleteAssignment(req, res) {
         if (err) {
             res.send(err);
         }
-        res.json({message: `${assignment.nom} deleted`});
+        res.json({message: `${assignment.titre} deleted`});
     })
 }
 
