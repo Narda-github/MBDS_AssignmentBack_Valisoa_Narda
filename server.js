@@ -1,7 +1,7 @@
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
-let assignment = require('./routes/assignments');
+let assignment = require('./routes/etudiants.routes');
 
 let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -43,16 +43,20 @@ let port = process.env.PORT || 8010;
 
 // les routes
 const prefix = '/api';
+const authRoutes = require('./routes/etudiants.routes');
+
+app.use(express.json());
+app.use('/api/etu/', authRoutes);
 
 // http://serveur..../assignments
-app.route(prefix + '/assignments')
+/*app.route(prefix + '/assignments')
   .post(assignment.postAssignment)
   .put(assignment.updateAssignment)
   .get(assignment.getAssignments);
 
 app.route(prefix + '/assignments/:id')
   .get(assignment.getAssignment)
-  .delete(assignment.deleteAssignment);
+  .delete(assignment.deleteAssignment);*/
 
 
 // On démarre le serveur

@@ -1,17 +1,15 @@
-let Assignment = require('../model/assignment');
+const express = require('express');
+const router = express.Router();
+const authController = require('../controllers/etudiant.controller');
+const authService = require('../services/etudiant.service');
 
-// Récupérer tous les assignments (GET)
-/*
-function getAssignments(req, res){
-    Assignment.find((err, assignments) => {
-        if(err){
-            res.send(err)
-        }
+router.post('/login', authService.authenticate, authController.login);
+router.get('/generate', authService.generateSampleData, authController.generateSampleData);
 
-        res.send(assignments);
-    });
-}
-*/
+module.exports = router;
+
+
+let Assignment = require('../models/assignment');
 
 function getAssignments(req, res){
     let aggregateQuery = Assignment.aggregate();
@@ -97,8 +95,6 @@ function updateAssignment(req, res) {
 
 }
 
-// suppression d'un assignment (DELETE)
-// l'id est bien le _id de mongoDB
 function deleteAssignment(req, res) {
 
     Assignment.findByIdAndRemove(req.params.id, (err, assignment) => {
@@ -111,4 +107,4 @@ function deleteAssignment(req, res) {
 
 
 
-module.exports = { getAssignments, postAssignment, getAssignment, updateAssignment, deleteAssignment };
+//module.exports = { getAssignments, postAssignment, getAssignment, updateAssignment, deleteAssignment };
