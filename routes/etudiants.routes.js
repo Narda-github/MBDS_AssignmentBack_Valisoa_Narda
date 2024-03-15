@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/etudiant.controller');
-const authService = require('../services/etudiant.service');
 
-router.post('/login', authService.authenticate, authController.login);
-router.get('/generate', authService.generateSampleData, authController.generateSampleData);
+router.post('/login',authController.login);
+router.get('/generate', authController.generateSampleData);
+router.get('/getAssi_id', authController.my_assignement_id);
+router.get('/getAssi_all', authController.my_assignement_all);
 
 module.exports = router;
 

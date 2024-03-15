@@ -7,8 +7,6 @@ let mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 // mongoose.set('debug', true);
 
-// remplacer toute cette chaine par l'URI de connexion à votre propre base dans le cloud s
-//const uri = 'mongodb+srv://mb1:toto@cluster0.lxvcyxy.mongodb.net/assignments?retryWrites=true&w=majority&appName=Cluster0';
 const uri = 'mongodb+srv://assigmentapp:assigmentapp123@cluster0.slrjbpl.mongodb.net/assignments?retryWrites=true&w=majority&appName=Cluster0';
 const options = {
   useNewUrlParser: true,
@@ -26,7 +24,6 @@ mongoose.connect(uri, options)
       console.log('Erreur de connexion: ', err);
     });
 
-// Pour accepter les connexions cross-domain (CORS)
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -34,14 +31,11 @@ app.use(function (req, res, next) {
   next();
 });
 
-// Pour les formulaires
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Obligatoire si déploiement dans le cloud !
 let port = process.env.PORT || 8010;
 
-// les routes
 const prefix = '/api';
 const authRoutes = require('./routes/etudiants.routes');
 

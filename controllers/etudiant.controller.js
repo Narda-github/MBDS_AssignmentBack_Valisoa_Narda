@@ -1,9 +1,14 @@
 const authService = require('../services/etudiant.service');
 
-async function login(req, res) {
-  res.json({ student: req.student, token: req.token });
+function login(req, res) {
+  authService.authenticate(req, res);
 }
-
+async function my_assignement_id(req, res) {
+  await authService.getAssignment(req, res);
+}
+async function my_assignement_all(req, res) {
+  await authService.getAssignments(req, res);
+}
 async function generateSampleData(req, res) {
   try {
     await authService.generateSampleData();
@@ -14,5 +19,7 @@ async function generateSampleData(req, res) {
 }
 module.exports = {
   login,
-  generateSampleData
+  generateSampleData,
+  my_assignement_id,
+  my_assignement_all
 };
