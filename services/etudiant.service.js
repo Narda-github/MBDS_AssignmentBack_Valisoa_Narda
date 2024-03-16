@@ -13,22 +13,18 @@ async function authenticate(req, res, next) {
           if (!user) {
               return res.status(401).json({ error: 'Utilisateur non trouvé !' });
           }
-          bcrypt.compareSync(req.body.mdp, user.mdp)
-              .then(valid => {
-                  if (!valid) {
-                      return res.status(401).json({ error: 'Mot de passe incorrect !' });
-                  }
-                  res.status(200).json({
-                      userId: user._id,
-                      token: jwt.sign(
-                          { userId: user._id },
-                          'RANDOM_TOKEN_SECRET',
-                          { expiresIn: '24h' }
-                      )
-                  });
-              })
-              .catch(error => res.status(500).json({ error:error.message+"ro" }));
-      })
+          if (user.mdp ===req.body.mdp){
+            res.status(200).json({
+              userId: user._id,
+              token: jwt.sign(
+                  { userId: user._id },
+                  'RANDOM_TOKEN_SECRET',
+                  { expiresIn: '24h' }
+              )
+            });
+          }
+          
+        })
       .catch(error => res.status(500).json({ error:error.message+"ro" }));
   } catch (error) {
     res.status(400).json({ message: error.message });
