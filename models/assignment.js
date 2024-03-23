@@ -7,11 +7,11 @@ let AssignmentSchema = new Schema({
     dateDeRendu: Date,
     titre: String,
     rendu: Boolean,
-    auteur: {
+  /* auteur: {
       nom: String,
       photo: String,
       email: String
-    },
+    },*/
     matiere: {
       titre: String,
       prof: {

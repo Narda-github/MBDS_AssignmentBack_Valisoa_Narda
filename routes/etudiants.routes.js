@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/etudiant.controller');
 
+router.post('/assignment/ajout',authController.addAssignmentByStudent);
 router.post('/login',authController.login);
 router.get('/generate', authController.generateSampleData);
 router.get('/getAssi_id', authController.my_assignement_id);

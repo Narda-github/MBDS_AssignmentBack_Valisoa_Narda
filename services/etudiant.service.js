@@ -7,9 +7,12 @@ const Stu = mongoose.model('Student', Student.studentSchema);
 const { ObjectId } = require('mongodb');
 
 async function authenticate(req, res, next) {
+  console.log("calling authenticate .....");
   try {
-    Student.findOne({ "pseudo": req.body.pseudo })
+    const {pseudo,mdp} = req.body;
+    /* Student.findOne({ "pseudo": req.body.pseudo })
       .then(user => {
+          console.log("in findOne .....");
           if (!user) {
               return res.status(401).json({ error: 'Utilisateur non trouvé !' });
           }
@@ -25,9 +28,26 @@ async function authenticate(req, res, next) {
           }
           
         })
-      .catch(error => res.status(500).json({ error:error.message+"ro" }));
+      .catch(error => res.status(500).json({ error:error.message+"ro" }));*/
+    console.log(req.body);
+    const user = await Student.findOne({ "pseudo": pseudo , "mdp": mdp});
+    if(!user){
+      return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+    }else{
+      console.log("user OK");
+      res.status(200).json({
+        userId: user._id,
+        token: jwt.sign(
+            { userId: user._id },
+            'RANDOM_TOKEN_SECRET',
+            { expiresIn: '24h' }
+        )
+      });
+    }
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    //res.status(400).json({ message: error.message });
+    console.log(error.message);
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -58,6 +78,9 @@ async function getAssignments(req, res, next) {
       return res.status(404).json({ message: "Étudiant non trouvé" });
     }
     const assignments = student.assignments;
+    console.log("assignements de "+ req.body.pseudo);
+    console.log(assignments);
+
     if (!assignments || assignments.length === 0) {
       return res.status(404).json({ message: "Aucun assignement trouvé pour cet étudiant" });
     }
@@ -190,9 +213,66 @@ async function generateSampleData() {
         throw error;
     }
 }
-  
+/**
+ * input
+ * {
+ *    pseudo 
+ *    assignment : Assignement obj
+ * }
+ * *exemple**
+ * {
+   "pseudo":"etudiant1",
+   "addAssignment":
+      {
+         "id":"1",
+         "dateDeRendu":"2024-03-23",
+         "titre":"Nouveau update",
+         "rendu":true,
+         "auteur":{
+            "nom":"Auteur 1",
+            "photo":"/chemin/vers/photo1.jpg",
+            "email":"auteur1@email.com"
+         },
+         "matiere":{
+            "titre":"Matiere 2",
+            "prof":{
+               "nom":"Professeur 2",
+               "photo":"/chemin/vers/photo_prof1.jpg",
+               "email":"prof1@email.com"
+            }
+         },
+         "remarques":"Très bien fait!"
+      }
+      }
+*
+*OUTPUT
+*message
+*"1  assignment ajouté pour + pseudo"
+ */
+async function addAssignmentByStudent(req,res){
+  try{
+    const {pseudo,addAssignment } = req.body;
+    const student =  await Student.findOne({pseudo : pseudo});
+    if(!student){
+      return res.status(401).json({ error: 'Etudiant non trouvé !' });
+    }
+    let studentAssignment = student.assignments;
+    studentAssignment.push(addAssignment);
+    await Student.updateOne({pseudo:pseudo},{assignments:studentAssignment})
+    .then(response => {
+      res.status(200).json(response.nModified+"  assignment ajouté pour "+pseudo);
+    }).catch(error => {
+      console.log(error);
+      res.status(500).send({message :"Ajout Assignement erreur  : "+error});
+    });
+  }catch (error) {
+    console.log(error.message);
+    res.status(500).json({ message: error.message });
+  }
+}
   
 module.exports = {
+    addAssignmentByStudent,
     generateSampleData,
     authenticate,
     getAssignment,
